@@ -1,0 +1,3 @@
+# Netlify が push のたびに作り直すので、作成結果は入れない
+/netlify/
+/netlify.zip

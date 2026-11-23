@@ -1,0 +1,8 @@
+# Netlify の設定
+# push するたびに .txt から netlify フォルダを作り、その中身を公開する
+[build]
+  command = "node build-netlify.mjs"
+  publish = "netlify"
+
+[build.environment]
+  NODE_VERSION = "22"

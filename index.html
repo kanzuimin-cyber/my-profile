@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>自己紹介</title>
+<style>
+  :root {
+    --bg: #f7f6f3;
+    --panel: #ffffff;
+    --text: #1d1d1f;
+    --muted: #6b6b70;
+    --line: #e4e2dd;
+    --accent: #2f5bea;
+    --accent-soft: #e8eefd;
+    --accent-text: #ffffff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #111214;
+      --panel: #1a1b1e;
+      --text: #ececee;
+      --muted: #9a9aa2;
+      --line: #2c2d31;
+      --accent: #7c9bff;
+      --accent-soft: #1f2640;
+      --accent-text: #0e1220;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Yu Gothic UI", Meiryo, sans-serif;
+    font-size: 16px;
+    line-height: 1.8;
+  }
+  a { color: var(--accent); }
+  main { max-width: 760px; margin: 0 auto; padding: 56px 20px 32px; }
+
+  /* 名前と肩書き */
+  .hero { display: flex; align-items: center; gap: 28px; margin-bottom: 40px; }
+  .avatar {
+    flex: none;
+    width: 112px;
+    height: 112px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--accent);
+    color: var(--accent-text);
+    font-size: 48px;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+  .hero h1 { margin: 0; font-size: 40px; line-height: 1.2; letter-spacing: 0.02em; }
+  .hero .title { margin: 8px 0 0; color: var(--muted); font-size: 17px; }
+  .hero .title span + span::before { content: "/"; margin: 0 10px; color: var(--line); }
+  .hero .cta { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px; }
+
+  /* セクション */
+  section {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 24px 28px;
+    margin-bottom: 16px;
+  }
+  section h2 { margin: 0 0 12px; font-size: 18px; display: flex; align-items: baseline; gap: 12px; }
+  section h2 .en {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  section p { margin: 0 0 8px; }
+  section p:last-child { margin-bottom: 0; }
+  section ul.plain { margin: 0; padding-left: 1.2em; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+  .chips li {
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .works { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+  .works a {
+    display: block;
+    padding: 12px 16px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--text);
+    overflow-wrap: anywhere;
+  }
+  .works a:hover { border-color: var(--accent); }
+  .works .label { font-weight: 600; display: block; }
+  .works .url { color: var(--muted); font-size: 14px; }
+  .pending {
+    color: var(--muted);
+    border: 1px dashed var(--line);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin: 0;
+  }
+
+  .button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: var(--accent-text);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+  }
+  .button.ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+  .contact-list { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+  .contact-list .label { color: var(--muted); font-size: 14px; margin-right: 8px; }
+
+  footer { text-align: center; color: var(--muted); font-size: 13px; padding: 24px 0 8px; }
+  .error {
+    border: 1px solid #d1242f;
+    color: #d1242f;
+    border-radius: 10px;
+    padding: 12px 16px;
+  }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  @media (max-width: 600px) {
+    main { padding-top: 32px; }
+    .hero { flex-direction: column; text-align: center; gap: 16px; }
+    .hero .cta { justify-content: center; }
+    .avatar { width: 96px; height: 96px; font-size: 40px; }
+    .hero h1 { font-size: 32px; }
+    section { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+<main id="app" aria-busy="true"></main>
+<footer id="footer"></footer>
+
+<script>
+  "use strict";
+
+  // 見出しごとの英語の小見出し(知らない見出しは日本語だけで表示する)
+  const EN = { 自己紹介: "About", スキル: "Skills", 制作実績: "Works", 連絡先: "Contact", 経歴: "Career", 趣味: "Hobbies" };
+
+  function el(tag, attrs = {}, ...children) {
+    const node = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) {
+      if (v === null || v === undefined || v === false) continue;
+      if (k === "text") node.textContent = v;
+      else node.setAttribute(k, v);
+    }
+    for (const c of children.flat()) {
+      if (c === null || c === undefined || c === false) continue;
+      node.append(c instanceof Node ? c : document.createTextNode(String(c)));
+    }
+    return node;
+  }
+
+  function sectionBox(title, ...body) {
+    const id = "s-" + encodeURIComponent(title);
+    return el("section", { "aria-labelledby": id },
+      el("h2", { id }, title, EN[title] ? el("span", { class: "en", text: EN[title] }) : null),
+      ...body);
+  }
+
+  const paragraphs = (s) => s.paragraphs.map((p) => el("p", { text: p }));
+
+  // 箇条書き1つを表示用の要素にする
+  function itemNode(item) {
+    if (item.placeholder) return el("span", { text: item.label ? `${item.label}(準備中)` : "準備中" });
+    if (item.kind === "url") return el("a", { href: item.value, target: "_blank", rel: "noopener noreferrer", text: item.label || item.value });
+    if (item.kind === "email") return el("a", { href: "mailto:" + item.value, text: item.value });
+    return item.label ? `${item.label}: ${item.value}` : item.value;
+  }
+
+  const RENDERERS = {
+    スキル: (s) => sectionBox(s.title, paragraphs(s),
+      el("ul", { class: "chips" }, s.items.map((i) => el("li", { text: i.label ? `${i.label}: ${i.value}` : i.value })))),
+
+    制作実績: (s) => {
+      const ready = s.items.filter((i) => !i.placeholder);
+      const body = ready.length === 0
+        ? el("p", { class: "pending", text: "制作実績は現在準備中です。公開でき次第、ここに掲載します。" })
+        : el("ul", { class: "works" }, ready.map((i) => el("li", {},
+            i.kind === "url"
+              ? el("a", { href: i.value, target: "_blank", rel: "noopener noreferrer" },
+                  el("span", { class: "label", text: i.label || "作品" }),
+                  el("span", { class: "url", text: i.value }))
+              : el("p", { text: i.label ? `${i.label}: ${i.value}` : i.value }))));
+      return sectionBox(s.title, paragraphs(s), body);
+    },
+
+    連絡先: (s) => sectionBox(s.title, paragraphs(s),
+      el("ul", { class: "contact-list" }, s.items.map((i) => el("li", {},
+        i.label ? el("span", { class: "label", text: i.label }) : null,
+        itemNode(i))))),
+  };
+
+  function genericSection(s) {
+    return sectionBox(s.title, paragraphs(s),
+      s.items.length ? el("ul", { class: "plain" }, s.items.map((i) => el("li", {}, itemNode(i)))) : null);
+  }
+
+  function render(profile) {
+    const app = document.getElementById("app");
+    const name = profile.name || "名前未設定";
+    const titleSection = profile.sections.find((s) => s.title === "肩書き");
+    const titles = titleSection
+      ? [...titleSection.paragraphs, ...titleSection.items.map((i) => i.value)].join(" / ").split(/\s*\/\s*/).filter(Boolean)
+      : [];
+    const email = profile.sections.flatMap((s) => s.items).find((i) => i.kind === "email" && !i.placeholder);
+
+    document.title = `${name} | 自己紹介`;
+
+    const hero = el("header", { class: "hero" },
+      el("div", { class: "avatar", "aria-hidden": "true", text: Array.from(name)[0] }),
+      el("div", {},
+        el("h1", { text: name }),
+        titles.length ? el("p", { class: "title" }, titles.map((t) => el("span", { text: t }))) : null,
+        email ? el("div", { class: "cta" },
+          el("a", { class: "button", href: "mailto:" + email.value, text: "メールで連絡する" })) : null));
+
+    const sections = profile.sections
+      .filter((s) => s.title !== "肩書き")
+      .filter((s) => s.paragraphs.length || s.items.length)
+      .map((s) => (RENDERERS[s.title] ?? genericSection)(s));
+
+    app.replaceChildren(hero, ...sections);
+    app.removeAttribute("aria-busy");
+    document.getElementById("footer").textContent = `© ${new Date().getFullYear()} ${name}`;
+  }
+
+  fetch("/profile.json", { cache: "no-store" })
+    .then((r) => r.json().then((data) => (r.ok ? data : Promise.reject(new Error(data.message)))))
+    .then(render)
+    .catch((err) => {
+      const app = document.getElementById("app");
+      app.replaceChildren(el("p", { class: "error", role: "alert", text:
+        "プロフィールを読み込めませんでした。start.bat から起動しているか確認してください。" + (err.message ? `(${err.message})` : "") }));
+      app.removeAttribute("aria-busy");
+    });
+</script>
+</body>
+</html>
